@@ -1,0 +1,333 @@
+{
+    "info": {
+        "name": "Candidate Referral System API",
+        "description": "Complete API collection for the Candidate Referral Management System. Includes authentication, candidate management, and analytics endpoints.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:5002",
+            "type": "string"
+        },
+        {
+            "key": "jwt_token",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Register User",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"test123\",\n  \"role\": \"recruiter\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/signup",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "signup"
+                            ]
+                        },
+                        "description": "Register a new user account. Role can be 'admin' or 'recruiter'."
+                    }
+                },
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    const response = pm.response.json();",
+                                    "    pm.collectionVariables.set('jwt_token', response.data.token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login"
+                            ]
+                        },
+                        "description": "Login with email and password. Returns JWT token that is automatically saved to collection variable."
+                    }
+                }
+            ],
+            "description": "User authentication endpoints"
+        },
+        {
+            "name": "Candidates",
+            "item": [
+                {
+                    "name": "Get All Candidates",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/candidates",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "candidates"
+                            ]
+                        },
+                        "description": "Get all candidates. Admins see all candidates, recruiters see only their own."
+                    }
+                },
+                {
+                    "name": "Get Candidate by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/candidates/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "candidates",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "",
+                                    "description": "Candidate ID"
+                                }
+                            ]
+                        },
+                        "description": "Get a specific candidate by ID. Recruiters can only access their own candidates."
+                    }
+                },
+                {
+                    "name": "Create Candidate",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phone\": \"+1-555-1234\",\n  \"jobTitle\": \"Senior Software Engineer\",\n  \"resume\": \"https://example.com/resume.pdf\",\n  \"status\": \"Pending\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/candidates",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "candidates"
+                            ]
+                        },
+                        "description": "Create a new candidate referral. The logged-in user becomes the referrer."
+                    }
+                },
+                {
+                    "name": "Update Candidate",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"John Doe Updated\",\n  \"email\": \"john.updated@example.com\",\n  \"phone\": \"+1-555-5678\",\n  \"jobTitle\": \"Lead Software Engineer\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/candidates/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "candidates",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "",
+                                    "description": "Candidate ID"
+                                }
+                            ]
+                        },
+                        "description": "Update candidate details. Recruiters can only update their own candidates."
+                    }
+                },
+                {
+                    "name": "Update Candidate Status",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"status\": \"Reviewed\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/candidates/:id/status",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "candidates",
+                                ":id",
+                                "status"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "",
+                                    "description": "Candidate ID"
+                                }
+                            ]
+                        },
+                        "description": "Update candidate status. Valid values: Pending, Reviewed, Hired. Recruiters can only update their own candidates."
+                    }
+                },
+                {
+                    "name": "Delete Candidate",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/candidates/:id",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "candidates",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "",
+                                    "description": "Candidate ID"
+                                }
+                            ]
+                        },
+                        "description": "Delete a candidate. Recruiters can only delete their own candidates."
+                    }
+                }
+            ],
+            "description": "Candidate management endpoints with RBAC enforced"
+        },
+        {
+            "name": "Analytics",
+            "item": [
+                {
+                    "name": "Get My Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/analytics/my-stats",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "analytics",
+                                "my-stats"
+                            ]
+                        },
+                        "description": "Get personal statistics for the logged-in recruiter (total referrals, pending, reviewed, hired counts)."
+                    }
+                },
+                {
+                    "name": "Get Recruiter Performance",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/analytics/recruiter-performance",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "analytics",
+                                "recruiter-performance"
+                            ]
+                        },
+                        "description": "Get performance metrics for all recruiters. Admin-only endpoint."
+                    }
+                },
+                {
+                    "name": "Get All Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/analytics/all-stats",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "analytics",
+                                "all-stats"
+                            ]
+                        },
+                        "description": "Get system-wide statistics (total candidates, status distribution). Admin-only endpoint."
+                    }
+                }
+            ],
+            "description": "Analytics and reporting endpoints"
+        }
+    ]
+}
