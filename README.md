@@ -42,7 +42,8 @@ This system addresses the need for organizations to efficiently manage employee-
 
 ### Beyond Assignment Scope
 
-**Role-Based Access Control (RBAC):** Implemented to demonstrate real-world application security patterns. In production recruitment systems, different roles require different levels of access to sensitive candidate data.
+**Role-Based Access Control (RBAC):** Implemented to demonstrate real-world application security patterns. In production recruitment systems, different roles require different levels of access to sensitive candidate data, also the role model was intentionally limited to Admin and Recruiter to avoid overengineering while still reflecting real-world recruitment workflows.
+
 
 **Analytics Dashboard:** Added to showcase data visualization capabilities and provide actionable insights that would be valuable in a production environment, helping organizations track referral program effectiveness.
 
@@ -52,7 +53,6 @@ This system addresses the need for organizations to efficiently manage employee-
 - React 18.3
 - Axios (HTTP client)
 - Recharts (data visualization)
-- React Router DOM (navigation)
 - jwt-decode (token parsing)
 - Vite (build tool)
 
