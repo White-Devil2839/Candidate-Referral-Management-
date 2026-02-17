@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createCandidate } from './api';
 
-function ReferralForm({ onCandidateAdded, onCancel }) {
+function ReferralForm({ onSuccess, onCancel }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -46,9 +46,9 @@ function ReferralForm({ onCandidateAdded, onCancel }) {
         jobTitle: ''
       });
 
-      // Notify parent to refresh candidate list
-      if (onCandidateAdded) {
-        onCandidateAdded();
+      // Notify parent to refresh candidate list and close form
+      if (onSuccess) {
+        onSuccess();
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add candidate');
