@@ -79,7 +79,7 @@ candidate-referral-system/
 │   ├── src/
 │   │   ├── models/       # Mongoose schemas
 │   │   ├── controllers/  # Route controllers
-│   │   ├── middleware/   # Auth & RBAC middleware
+│   │   ├── middleware/   # Auth & RBAC(Role-Based Access Control) middleware
 │   │   ├── routes/       # API routes
 │   │   └── config/       # Database configuration
 │   ├── seed.js           # Database seeding script
